@@ -18,7 +18,7 @@ function SWEP:PrimaryAttack()
 		self:Remove()
 	end
 	if tr.HitWorld and !self.camera then
-		local camera = ents.Create("ttt_detective_camera")
+		local camera = ents.Create("ttt_detective_camera_loures")
 		camera:SetPlayer(self.Owner)
 		camera:SetPos(tr.HitPos - self.Owner:EyeAngles():Forward())
 		camera:SetAngles((self.Owner:EyeAngles():Forward() * -1):Angle())
@@ -33,7 +33,7 @@ function SWEP:PrimaryAttack()
 		camera:SetShouldPitch(true)
 		self.camera = camera
 	end
-	for _, v in ipairs(ents.FindByClass("ttt_detective_camera")) do
+	for _, v in ipairs(ents.FindByClass("ttt_detective_camera_loures")) do
 		if v:GetPlayer() == self.Owner and v ~= self.camera then
 			v:Remove() --if the player already has a camera, remove it
 		end

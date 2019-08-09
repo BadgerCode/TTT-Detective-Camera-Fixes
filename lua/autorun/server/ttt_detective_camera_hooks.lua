@@ -1,15 +1,15 @@
 -- TODO: Make hook names more unique
 
-hook.Remove("TTTCamera.VISLEAF")
-hook.Add("SetupPlayerVisibility", "TTTCamera.VISLEAF", function()
-    for k, v in ipairs(ents.FindByClass("ttt_detective_camera")) do
+hook.Remove("SetupPlayerVisibility", "visleaf_detective_camera_loures")
+hook.Add("SetupPlayerVisibility", "visleaf_detective_camera_loures", function()
+    for k, v in ipairs(ents.FindByClass("ttt_detective_camera_loures")) do
         AddOriginToPVS(v:GetPos() + v:GetAngles():Forward() * 3)
     end
 end)
 
-hook.Remove("TTTCamera.Rotate")
-hook.Add("SetupMove", "TTTCamera.Rotate", function(ply, mv)
-    for _, v in ipairs(ents.FindByClass("ttt_detective_camera")) do -- TODO: More unique entity name?
+hook.Remove("SetupMove", "rotate_camera_detective_camera_loures")
+hook.Add("SetupMove", "rotate_camera_detective_camera_loures", function(ply, mv)
+    for _, v in ipairs(ents.FindByClass("ttt_detective_camera_loures")) do -- TODO: More unique entity name?
         if v.IsReady and IsValid(v:GetPlayer()) and v:GetPlayer() == ply and v:GetShouldPitch() and ply:Alive() then
             local ang = v:GetAngles()
             ang:RotateAroundAxis(ang:Right(), ply:GetCurrentCommand():GetMouseY() * -.15)
@@ -25,17 +25,17 @@ end)
 
 -- TODO: Shared?
 
-hook.Remove("TTTCamera.RotateNoSwitch")
-hook.Add("PlayerSwitchWeapon", "TTTCamera.RotateNoSwitch", function(ply)
-    for _, v in ipairs(ents.FindByClass("ttt_detective_camera")) do -- TODO: More unique entity name?
+hook.Remove("PlayerSwitchWeapon", "weapon_switch_detective_camera_loures")
+hook.Add("PlayerSwitchWeapon", "weapon_switch_detective_camera_loures", function(ply)
+    for _, v in ipairs(ents.FindByClass("ttt_detective_camera_loures")) do -- TODO: More unique entity name?
         if v.IsReady and IsValid(v:GetPlayer()) and v:GetPlayer() == ply and v:GetShouldPitch() and ply:Alive() then
             return true
         end
     end
 end)
 
-hook.Remove("TTTCamera.Collide")
-hook.Add("ShouldCollide", "TTTCamera.Collide", function(e1, e2)
-    if e1:IsPlayer() and e2:GetClass() == "ttt_detective_camera" then return true end
-    if e2:IsPlayer() and e1:GetClass() == "ttt_detective_camera" then return true end
+hook.Remove("ShouldCollide", "collisions_detective_camera_loures")
+hook.Add("ShouldCollide", "collisions_detective_camera_loures", function(e1, e2)
+    if e1:IsPlayer() and e2:GetClass() == "ttt_detective_camera_loures" then return true end
+    if e2:IsPlayer() and e1:GetClass() == "ttt_detective_camera_loures" then return true end
 end)
