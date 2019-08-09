@@ -67,8 +67,3 @@ net.Receive("TTTCameraDetach", function()
 	RENDER_CONNECTION_LOST = true
 	timer.Simple(10, function() RENDER_CONNECTION_LOST = false end)
 end)
-
-
-hook.Add("ShouldDrawLocalPlayer", "TTTCamera.DrawLocalPlayer", function(ply)
-	return IN_CAMERA
-end)
