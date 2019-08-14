@@ -1,6 +1,8 @@
 # TTT Detective Camera Fixes
 
-Fixes for the [TTT Detective Camera](https://steamcommunity.com/sharedfiles/filedetails/?id=742075110)
+## Get it on the [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=1834616508).
+
+_Fixes for the [TTT Detective Camera](https://steamcommunity.com/sharedfiles/filedetails/?id=742075110)_
 
 # Fixes
 * Lua errors when you get the weapon out
