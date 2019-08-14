@@ -6,7 +6,7 @@ resource.AddFile("materials/vgui/ttt/icon_loures_camera.vmt")
 resource.AddFile("materials/tttcamera/cameranoise.vmt")
 
 function SWEP:Deploy()
-	-- self.Owner:DrawViewModel(false)
+	self.Owner:DrawViewModel(false)
 	self.Owner:DrawWorldModel(false)
 end
 

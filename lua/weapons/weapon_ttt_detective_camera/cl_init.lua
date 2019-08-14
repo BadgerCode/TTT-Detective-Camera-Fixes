@@ -21,7 +21,6 @@ end
 function SWEP:Deploy()
 	if IsValid(self.Owner) then
 		self.Owner:DrawViewModel(false)
-		-- self.Owner:DrawWorldModel(false)
 	end
 	return true
 end
