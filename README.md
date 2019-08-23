@@ -20,3 +20,5 @@ _Fixes for the [TTT Detective Camera](https://steamcommunity.com/sharedfiles/fil
 * When you pick it up, you can't re-place it
 * There's no world model when you drop it (it's invisible)
 * The blue hint text that appears doesn't show once you've picked the camera back up and try to re-place it, I think?
+* Can it be seen in the TTT damage log
+
