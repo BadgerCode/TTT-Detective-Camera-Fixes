@@ -15,17 +15,15 @@ end
 
 function ENT:Initialize()
 	self.CanPickup = false
-	self:SetModel("models/dav0r/camera.mdl")
+	self:SetModel("models/maxofs2d/camera.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 	self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 	self:DrawShadow(false)
-	self:SetModelScale(.33, 0)
+	self:SetModelScale(1)
 	self:Activate()
 	self.OriginalY = self:GetAngles().y
-	--self:SetPlayer(Entity(1))
-	--self:SetWelded(true)
 	timer.Simple(0, function() self:GetPhysicsObject():SetMass(25) end)
 	if SERVER then
 		self:SetUseType(SIMPLE_USE)

@@ -34,10 +34,9 @@ SWEP.AutoSpawnable = false
 -- View/World models
 SWEP.UseHands = true
 SWEP.ViewModel = Model("models/weapons/v_crowbar.mdl")
-SWEP.WorldModel = Model("models/dav0r/camera.mdl")
+SWEP.WorldModel = Model("models/maxofs2d/camera.mdl")
 
 function SWEP:Initialize()
-    self:SetModelScale(0.75)
     self:SetHoldType("camera")
 end
 
@@ -156,19 +155,23 @@ if CLIENT then
         local rightHandBone = self.Owner:LookupBone("ValveBiped.Bip01_R_Hand")
         if rightHandBone == nil then return end
         local rightHandPos, rightHandAngle = self.Owner:GetBonePosition(rightHandBone)
-        rightHandPos = rightHandPos + rightHandAngle:Forward() * 6.97 + rightHandAngle:Up() * -4.34 + rightHandAngle:Right() * 2.2
+        rightHandPos = rightHandPos + rightHandAngle:Forward() * 5 + rightHandAngle:Up() * 1.34 + rightHandAngle:Right() * 5.5
 
         if not IsValid(self.CustomWorldModel) then
             -- Ideally, this should be drawing the actual world model in the player's hand
             -- Couldn't get it to work so here's a clientside model instead
             self.CustomWorldModel = ClientsideModel(self.WorldModel, RENDERGROUP_OPAQUE)
-            self.CustomWorldModel:SetModelScale(0.55)
         end
+
+        local modelAngle = Angle(rightHandAngle.pitch, rightHandAngle.yaw, rightHandAngle.roll)
+        modelAngle:RotateAroundAxis(modelAngle:Forward(), 15)
+        modelAngle:RotateAroundAxis(modelAngle:Right(), 180)
+        modelAngle:RotateAroundAxis(modelAngle:Up(), 180)
 
         local modelSettings = {
             model = self.WorldModel,
             pos = rightHandPos,
-            angle = self.Owner:EyeAngles()
+            angle = modelAngle
         }
 
         render.Model(modelSettings, self.CustomWorldModel)
