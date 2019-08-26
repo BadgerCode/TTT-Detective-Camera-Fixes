@@ -1,5 +1,3 @@
--- TODO: Make hook names more unique
-
 hook.Remove("SetupPlayerVisibility", "visleaf_detective_camera_badger")
 hook.Add("SetupPlayerVisibility", "visleaf_detective_camera_badger", function()
     for k, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
@@ -9,7 +7,7 @@ end)
 
 hook.Remove("SetupMove", "rotate_camera_detective_camera_badger")
 hook.Add("SetupMove", "rotate_camera_detective_camera_badger", function(ply, mv)
-    for _, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do -- TODO: More unique entity name?
+    for _, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
         if v.IsReady and IsValid(v:GetPlayer()) and v:GetPlayer() == ply and v:GetShouldPitch() and ply:Alive() then
             local ang = v:GetAngles()
             ang:RotateAroundAxis(ang:Right(), ply:GetCurrentCommand():GetMouseY() * -.15)
@@ -27,7 +25,7 @@ end)
 
 hook.Remove("PlayerSwitchWeapon", "weapon_switch_detective_camera_badger")
 hook.Add("PlayerSwitchWeapon", "weapon_switch_detective_camera_badger", function(ply)
-    for _, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do -- TODO: More unique entity name?
+    for _, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
         if v.IsReady and IsValid(v:GetPlayer()) and v:GetPlayer() == ply and v:GetShouldPitch() and ply:Alive() then
             return true
         end

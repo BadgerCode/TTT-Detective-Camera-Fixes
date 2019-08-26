@@ -45,10 +45,10 @@ function SWEP:SetupDataTables()
     self:NetworkVar("Bool", 0, "CameraIsPlaced")
 end
 
-if SERVER then
-    function SWEP:PrimaryAttack()
-        if not IsFirstTimePredicted() then return end
+function SWEP:PrimaryAttack()
+    if not IsFirstTimePredicted() then return end
 
+    if SERVER then
         local tr = util.TraceLine({
             start = self.Owner:GetShootPos(),
             endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * 100,
@@ -57,8 +57,12 @@ if SERVER then
 
         if IsValid(self.camera) and self.camera:GetShouldPitch() then
             self.camera:SetShouldPitch(false)
-            self:Remove()
             -- Placement confirmed
+            self:SetNextPrimaryFire(CurTime() + 1)
+
+            timer.Simple(0.5, function()
+                self:Remove()
+            end)
         end
 
         if tr.HitWorld and not self.camera then
@@ -78,7 +82,6 @@ if SERVER then
 
             camera:SetShouldPitch(true)
             self.camera = camera
-
             -- When first placed
             self:SetCameraIsPlaced(true)
             self:SetHoldType("magic")
@@ -86,7 +89,23 @@ if SERVER then
 
         self:RemoveExistingCameras()
     end
+end
 
+function SWEP:Deploy()
+    if SERVER and IsValid(self:GetOwner()) then
+        self:GetOwner():DrawViewModel(false)
+    end
+
+    return true
+end
+
+function SWEP:OnRemove()
+    if CLIENT and IsValid(self:GetOwner()) and self:GetOwner() == LocalPlayer() and self:GetOwner():Alive() then
+        RunConsoleCommand("lastinv")
+    end
+end
+
+if SERVER then
     function SWEP:RemoveExistingCameras()
         for _, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
             if v:GetPlayer() == self.Owner and v ~= self.camera then
@@ -97,18 +116,6 @@ if SERVER then
 end
 
 if CLIENT then
-    function SWEP:Deploy()
-        self.Owner:DrawViewModel(false)
-
-        return true
-    end
-
-    function SWEP:OnRemove()
-        if IsValid(self.Owner) then
-            self.Owner:ConCommand("lastinv")
-        end
-    end
-
     -- HUD properties
     local font = "CloseCaption_Normal"
     local pitchText = "MOVE THE MOUSE UP AND DOWN TO PITCH THE CAMERA"
@@ -145,7 +152,6 @@ if CLIENT then
 
         if isEquipped then
             if self:GetCameraIsPlaced() then return end
-
             self:DrawHeldWorldModel()
         else
             self:DrawModel()

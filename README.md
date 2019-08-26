@@ -10,11 +10,12 @@ _Fixes for the [TTT Detective Camera](https://steamcommunity.com/sharedfiles/fil
 
 # TODO
 * Fix flashlight pointing in the wrong direction when the camera is active
+    * _This is because it hooks into ShouldDrawLocalPlayer_
 * Is the camera too difficult to see?
+* Pitching the camera is initially a bit difficult
+* The camera interference effect doesn't disappear when you pick it up
 
 
 # Feedback
-* When you place it (not holstered) you instantly shoot/hit (which could cause you to break it straight away)
-* When you pick it up, you can't re-place it
 * Can it be seen in the TTT damage log
 
