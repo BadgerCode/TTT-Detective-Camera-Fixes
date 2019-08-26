@@ -9,10 +9,10 @@ function ENT:Use(user)
 	if user:IsDetective() and user == self:GetPlayer() then
 		self:Remove()
 		if !self:GetShouldPitch() then
-			user:Give("weapon_ttt_detective_camera")
+			user:Give("weapon_ttt_detective_camera_badger")
 		else
-			user:GetWeapon("weapon_ttt_detective_camera").camera:SetShouldPitch(false)
-			user:GetWeapon("weapon_ttt_detective_camera").camera:Remove()
+			user:GetWeapon("weapon_ttt_detective_camera_badger").camera:SetShouldPitch(false)
+			user:GetWeapon("weapon_ttt_detective_camera_badger").camera:Remove()
 			net.Start("TTTCamera.Instructions")
 			net.Send(user)
 		end

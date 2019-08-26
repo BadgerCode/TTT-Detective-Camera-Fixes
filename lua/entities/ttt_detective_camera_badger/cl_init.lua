@@ -17,7 +17,7 @@ local NOISE = Material("tttcamera/cameranoise")
 hook.Add("HUDPaint", "DrawCameraScreen", function()
 	local x = ScrW() / 3.7
 
-	for k, ent in ipairs(ents.FindByClass("ttt_detective_camera_loures")) do
+	for k, ent in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
 		if IsValid(ent) and ent:GetPlayer() == LocalPlayer() and ent:GetWelded() and LocalPlayer():Alive() then
 			if !RENDER_CONNECTION_LOST then
 				cam.Start2D()

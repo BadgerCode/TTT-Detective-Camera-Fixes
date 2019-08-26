@@ -1,7 +1,7 @@
 ENT.Type = "anim"
 ENT.Base = "base_anim"
 ENT.PrintName = ""
-ENT.Author = "Loures"
+ENT.Author = "Loures and Badger"
 ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.IsReady = false
