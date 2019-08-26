@@ -6,6 +6,9 @@ _Fixes for the [TTT Detective Camera](https://steamcommunity.com/sharedfiles/fil
 
 # Fixes
 * Lua errors when you get the weapon out
+* Better animation
+* Fixes interference not disappearing when you pick the camera up
+* Improves hint text (MOUSE1 to place; better contrast and text)
 
 
 # TODO
@@ -13,7 +16,6 @@ _Fixes for the [TTT Detective Camera](https://steamcommunity.com/sharedfiles/fil
     * _This is because it hooks into ShouldDrawLocalPlayer_
 * Is the camera too difficult to see?
 * Pitching the camera is initially a bit difficult
-* The camera interference effect doesn't disappear when you pick it up
 
 
 # Feedback

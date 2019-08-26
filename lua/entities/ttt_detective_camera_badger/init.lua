@@ -2,8 +2,8 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-util.AddNetworkString("TTTCameraDetach")
-util.AddNetworkString("TTTCamera.Instructions")
+util.AddNetworkString("Badger_TTTCameraDetach")
+util.AddNetworkString("Badger_TTTCameraPickedUp")
 
 function ENT:Use(user)
 	if user:IsDetective() and user == self:GetPlayer() then
@@ -13,9 +13,10 @@ function ENT:Use(user)
 		else
 			user:GetWeapon("weapon_ttt_detective_camera_badger").camera:SetShouldPitch(false)
 			user:GetWeapon("weapon_ttt_detective_camera_badger").camera:Remove()
-			net.Start("TTTCamera.Instructions")
-			net.Send(user)
 		end
+
+		net.Start("Badger_TTTCameraPickedUp")
+		net.Send(user)
 	end
 end
 
@@ -23,7 +24,7 @@ function ENT:OnTakeDamage(dmginfo)
 	if self:GetShouldPitch() then return end
 	if dmginfo:GetDamageType() ~= DMG_BURN then
 		if IsValid(self:GetPlayer()) and self:GetWelded() then
-			net.Start("TTTCameraDetach")
+			net.Start("Badger_TTTCameraDetach")
 			net.Send(self:GetPlayer())
 		end
 		constraint.RemoveAll(self)

@@ -61,9 +61,13 @@ hook.Add("HUDPaint", "DrawCameraScreen", function()
 	end
 end)
 
-net.Receive("TTTCameraDetach", function()
+net.Receive("Badger_TTTCameraDetach", function()
 	if RENDER_CONNECTION_LOST then return end
 	surface.PlaySound("ambient/energy/spark5.wav")
 	RENDER_CONNECTION_LOST = true
 	timer.Simple(10, function() RENDER_CONNECTION_LOST = false end)
+end)
+
+net.Receive("Badger_TTTCameraPickedUp", function()
+	RENDER_CONNECTION_LOST = false
 end)
