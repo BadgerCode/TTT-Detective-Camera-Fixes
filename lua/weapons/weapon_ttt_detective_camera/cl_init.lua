@@ -1,54 +1,51 @@
 include("shared.lua")
-
 SWEP.PrintName = "Camera"
-SWEP.Slot      = 7 
-
-SWEP.ViewModelFOV  = 10
+SWEP.Slot = 7
+SWEP.ViewModelFOV = 10
 SWEP.ViewModelFlip = false
 SWEP.Icon = "vgui/ttt/icon_loures_camera"
 
 SWEP.EquipMenuData = {
-  type = "item_weapon",
-  name = "Camera",
-  desc = "Use this to watch people get killed live\nMOUSE1 to place"
+    type = "item_weapon",
+    name = "Camera",
+    desc = "MOUSE1 to place.\nUse this to watch an area of the map."
 }
 
-function SWEP:PrimaryAttack()
-	self.DrawInstructions = true
-	RENDER_CONNECTION_LOST = false
-end
-
 function SWEP:Deploy()
-	if IsValid(self.Owner) then
-		self.Owner:DrawViewModel(false)
-	end
-	return true
-end
+    if IsValid(self.Owner) then
+        self.Owner:DrawViewModel(false)
+    end
 
-function SWEP:DrawWorldModel()
+    return true
 end
 
 function SWEP:OnRemove()
-	if IsValid(self.Owner) then
-		self.Owner:ConCommand("lastinv")
-	end
+    if IsValid(self.Owner) then
+        self.Owner:ConCommand("lastinv")
+    end
 end
 
-surface.SetFont("TabLarge")
-local w = surface.GetTextSize("MOVE THE MOUSE UP AND DOWN TO PITCH THE CAMERA")
+
+
+local font = "CloseCaption_Normal"
+local pitchText = "MOVE THE MOUSE UP AND DOWN TO PITCH THE CAMERA"
+
+surface.SetFont(font)
+local textWidth, textHeight = surface.GetTextSize(pitchText)
 
 function SWEP:DrawHUD()
-	if self.DrawInstructions then
-		surface.SetFont("TabLarge")
-		surface.SetTextColor(Color(50, 60, 200, 255))
-		surface.SetTextPos(ScrW() / 2 - w / 2, ScrH() / 2 + 50)
-		surface.DrawText("MOVE THE MOUSE UP AND DOWN TO PITCH THE CAMERA")
-	end
-end
+    local drawPivotText = true
 
-net.Receive("TTTCamera.Instructions", function()
-	local p = LocalPlayer()
-	if p.GetWeapon and IsValid(p:GetWeapon("weapon_ttt_detective_camera")) then
-		p:GetWeapon("weapon_ttt_detective_camera").DrawInstructions = false
-	end
-end)
+    if drawPivotText then
+        local padding = 10
+        local textTopLeft = Vector(ScrW() / 2 - textWidth / 2, ScrH() / 2 + 50, 0)
+
+        surface.SetDrawColor(0, 0, 0, 220)
+        surface.DrawRect(textTopLeft.x - padding, textTopLeft.y - padding, textWidth + padding + padding, textHeight + padding + padding)
+
+        surface.SetFont(font)
+        surface.SetTextColor(Color(228, 199, 7, 255))
+        surface.SetTextPos(textTopLeft.x, textTopLeft.y)
+        surface.DrawText(pitchText)
+    end
+end
