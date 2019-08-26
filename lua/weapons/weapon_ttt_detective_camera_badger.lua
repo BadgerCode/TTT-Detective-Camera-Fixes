@@ -41,6 +41,10 @@ function SWEP:Initialize()
     self:SetHoldType("camera")
 end
 
+function SWEP:SetupDataTables()
+    self:NetworkVar("Bool", 0, "CameraIsPlaced")
+end
+
 if SERVER then
     function SWEP:PrimaryAttack()
         if not IsFirstTimePredicted() then return end
@@ -74,7 +78,10 @@ if SERVER then
 
             camera:SetShouldPitch(true)
             self.camera = camera
+
             -- When first placed
+            self:SetCameraIsPlaced(true)
+            self:SetHoldType("magic")
         end
 
         self:RemoveExistingCameras()
@@ -100,23 +107,68 @@ if CLIENT then
         self.Owner:ConCommand("lastinv")
     end
 
+    -- HUD properties
     local font = "CloseCaption_Normal"
     local pitchText = "MOVE THE MOUSE UP AND DOWN TO PITCH THE CAMERA"
+    local placementText = "PRESS MOUSE1 TO PLACE THE CAMERA"
+    -- Get HUD text sizxe
     surface.SetFont(font)
-    local textWidth, textHeight = surface.GetTextSize(pitchText)
+    local pitchTextWidth, pitchTextHeight = surface.GetTextSize(pitchText)
+    local placementTextWidth, placementTextHeight = surface.GetTextSize(placementText)
 
     function SWEP:DrawHUD()
-        local drawPivotText = true
-
-        if drawPivotText then
+        if self:GetCameraIsPlaced() == false then
             local padding = 10
-            local textTopLeft = Vector(ScrW() / 2 - textWidth / 2, ScrH() / 2 + 50, 0)
+            local textTopLeft = Vector(ScrW() / 2 - placementTextWidth / 2, ScrH() / 2 + 50, 0)
             surface.SetDrawColor(0, 0, 0, 220)
-            surface.DrawRect(textTopLeft.x - padding, textTopLeft.y - padding, textWidth + padding + padding, textHeight + padding + padding)
+            surface.DrawRect(textTopLeft.x - padding, textTopLeft.y - padding, placementTextWidth + padding + padding, placementTextHeight + padding + padding)
+            surface.SetFont(font)
+            surface.SetTextColor(Color(228, 199, 7, 255))
+            surface.SetTextPos(textTopLeft.x, textTopLeft.y)
+            surface.DrawText(placementText)
+        else
+            local padding = 10
+            local textTopLeft = Vector(ScrW() / 2 - pitchTextWidth / 2, ScrH() / 2 + 50, 0)
+            surface.SetDrawColor(0, 0, 0, 220)
+            surface.DrawRect(textTopLeft.x - padding, textTopLeft.y - padding, pitchTextWidth + padding + padding, pitchTextHeight + padding + padding)
             surface.SetFont(font)
             surface.SetTextColor(Color(228, 199, 7, 255))
             surface.SetTextPos(textTopLeft.x, textTopLeft.y)
             surface.DrawText(pitchText)
         end
+    end
+
+    function SWEP:DrawWorldModel()
+        local isEquipped = IsValid(self.Owner)
+
+        if isEquipped then
+            if self:GetCameraIsPlaced() then return end
+
+            self:DrawHeldWorldModel()
+        else
+            self:DrawModel()
+        end
+    end
+
+    function SWEP:DrawHeldWorldModel()
+        local rightHandBone = self.Owner:LookupBone("ValveBiped.Bip01_R_Hand")
+        if rightHandBone == nil then return end
+        local rightHandPos, rightHandAngle = self.Owner:GetBonePosition(rightHandBone)
+        rightHandPos = rightHandPos + rightHandAngle:Forward() * 6.97 + rightHandAngle:Up() * -4.34 + rightHandAngle:Right() * 2.2
+
+        if not IsValid(self.CustomWorldModel) then
+            -- Ideally, this should be drawing the actual world model in the player's hand
+            -- Couldn't get it to work so here's a clientside model instead
+            self.CustomWorldModel = ClientsideModel(self.WorldModel, RENDERGROUP_OPAQUE)
+            self.CustomWorldModel:SetModelScale(0.55)
+        end
+
+        local modelSettings = {
+            model = self.WorldModel,
+            pos = rightHandPos,
+            angle = self.Owner:EyeAngles()
+        }
+
+        render.Model(modelSettings, self.CustomWorldModel)
     end
 end
