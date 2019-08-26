@@ -104,7 +104,9 @@ if CLIENT then
     end
 
     function SWEP:OnRemove()
-        self.Owner:ConCommand("lastinv")
+        if IsValid(self.Owner) then
+            self.Owner:ConCommand("lastinv")
+        end
     end
 
     -- HUD properties
