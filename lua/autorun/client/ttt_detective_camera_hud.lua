@@ -1,9 +1,3 @@
-include("shared.lua")
-
-function ENT:Draw()
-	self:DrawModel()
-end
-
 surface.CreateFont("DermaExtraLarge", {
 	font = "Roboto",
 	size = 48,

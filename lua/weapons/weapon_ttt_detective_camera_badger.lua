@@ -1,4 +1,4 @@
--- Detective Equipment: Placeable camera
+-- Detective Equipment: Weapon to place cameras
 AddCSLuaFile()
 
 if SERVER then
@@ -42,49 +42,52 @@ function SWEP:Initialize()
 end
 
 function SWEP:SetupDataTables()
-    self:NetworkVar("Bool", 0, "CameraIsPlaced")
+    self:NetworkVar("Entity", 0, "Camera")
+end
+
+function SWEP:CameraIsPlaced()
+    return IsValid(self:GetCamera())
 end
 
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
 
     if SERVER then
-        local tr = util.TraceLine({
-            start = self.Owner:GetShootPos(),
-            endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * 100,
-            filter = self.Owner
-        })
+        if !self:CameraIsPlaced() then
+            local tr = util.TraceLine({
+                start = self.Owner:GetShootPos(),
+                endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * 100,
+                filter = self.Owner
+            })
 
-        if IsValid(self.camera) and self.camera:GetShouldPitch() then
-            self.camera:SetShouldPitch(false)
-            -- Placement confirmed
-            self:SetNextPrimaryFire(CurTime() + 1)
+            if tr.HitWorld then
+                local camera = ents.Create("ttt_detective_camera_badger")
+                camera:SetPlayer(self.Owner)
+                camera:SetPos(tr.HitPos - self.Owner:EyeAngles():Forward())
+                camera:SetAngles((self.Owner:EyeAngles():Forward() * -1):Angle())
+                camera:SetWelded(true)
+                camera:Spawn()
+                camera:Activate()
+                camera:SetPos(tr.HitPos - self.Owner:EyeAngles():Forward())
+                camera:SetAngles((self.Owner:EyeAngles():Forward() * -1):Angle())
 
-            timer.Simple(0.5, function()
-                self:Remove()
-            end)
-        end
+                timer.Simple(0, function()
+                    constraint.Weld(camera, tr.Entity, 0, 0, 0, true)
+                end)
 
-        if tr.HitWorld and not self.camera then
-            local camera = ents.Create("ttt_detective_camera_badger")
-            camera:SetPlayer(self.Owner)
-            camera:SetPos(tr.HitPos - self.Owner:EyeAngles():Forward())
-            camera:SetAngles((self.Owner:EyeAngles():Forward() * -1):Angle())
-            camera:SetWelded(true)
-            camera:Spawn()
-            camera:Activate()
-            camera:SetPos(tr.HitPos - self.Owner:EyeAngles():Forward())
-            camera:SetAngles((self.Owner:EyeAngles():Forward() * -1):Angle())
+                camera:SetPitchingModeEnabled(true)
+                self:SetCamera(camera)
+                self:SetHoldType("magic")
+            end
+        else
+            if self:GetCamera():GetPitchingModeEnabled() then
+                self:GetCamera():SetPitchingModeEnabled(false)
+                self:SetNextPrimaryFire(CurTime() + 1)
 
-            timer.Simple(0, function()
-                constraint.Weld(camera, tr.Entity, 0, 0, 0, true)
-            end)
-
-            camera:SetShouldPitch(true)
-            self.camera = camera
-            -- When first placed
-            self:SetCameraIsPlaced(true)
-            self:SetHoldType("magic")
+                timer.Simple(0.5, function()
+                    self:Remove()
+                end)
+            end
         end
 
         self:RemoveExistingCameras()
@@ -108,7 +111,7 @@ end
 if SERVER then
     function SWEP:RemoveExistingCameras()
         for _, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
-            if v:GetPlayer() == self.Owner and v ~= self.camera then
+            if v:GetPlayer() == self.Owner and v ~= self:GetCamera() then
                 v:Remove()
             end
         end
@@ -126,7 +129,7 @@ if CLIENT then
     local placementTextWidth, placementTextHeight = surface.GetTextSize(placementText)
 
     function SWEP:DrawHUD()
-        if self:GetCameraIsPlaced() == false then
+        if self:CameraIsPlaced() == false then
             local padding = 10
             local textTopLeft = Vector(ScrW() / 2 - placementTextWidth / 2, ScrH() / 2 + 50, 0)
             surface.SetDrawColor(0, 0, 0, 220)
@@ -151,7 +154,7 @@ if CLIENT then
         local isEquipped = IsValid(self.Owner)
 
         if isEquipped then
-            if self:GetCameraIsPlaced() then return end
+            if self:CameraIsPlaced() then return end
             self:DrawHeldWorldModel()
         else
             self:DrawModel()

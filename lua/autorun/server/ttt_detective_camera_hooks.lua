@@ -8,7 +8,7 @@ end)
 hook.Remove("SetupMove", "rotate_camera_detective_camera_badger")
 hook.Add("SetupMove", "rotate_camera_detective_camera_badger", function(ply, mv)
     for _, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
-        if v.IsReady and IsValid(v:GetPlayer()) and v:GetPlayer() == ply and v:GetShouldPitch() and ply:Alive() then
+        if v.IsReady and IsValid(v:GetPlayer()) and v:GetPlayer() == ply and v:GetPitchingModeEnabled() and ply:Alive() then
             local ang = v:GetAngles()
             ang:RotateAroundAxis(ang:Right(), ply:GetCurrentCommand():GetMouseY() * -.15)
             ang.p = math.Clamp(ang.p, -75, 75)
@@ -26,7 +26,7 @@ end)
 hook.Remove("PlayerSwitchWeapon", "weapon_switch_detective_camera_badger")
 hook.Add("PlayerSwitchWeapon", "weapon_switch_detective_camera_badger", function(ply)
     for _, v in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
-        if v.IsReady and IsValid(v:GetPlayer()) and v:GetPlayer() == ply and v:GetShouldPitch() and ply:Alive() then
+        if v.IsReady and IsValid(v:GetPlayer()) and v:GetPlayer() == ply and v:GetPitchingModeEnabled() and ply:Alive() then
             return true
         end
     end
