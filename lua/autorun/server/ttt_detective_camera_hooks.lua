@@ -37,3 +37,18 @@ hook.Add("ShouldCollide", "collisions_detective_camera_badger", function(e1, e2)
     if e1:IsPlayer() and e2:GetClass() == "ttt_detective_camera_badger" then return true end
     if e2:IsPlayer() and e1:GetClass() == "ttt_detective_camera_badger" then return true end
 end)
+
+
+
+-- A backup option, incase cameras aren't removed
+hook.Remove("TTTPrepareRound", "roundprep_detective_camera_badger")
+hook.Add("TTTPrepareRound", "roundprep_detective_camera_badger", CleanUpCameras)
+
+function CleanUpCameras()
+    print("Removing cameras")
+    for k, ent in ipairs(ents.FindByClass("ttt_detective_camera_badger")) do
+        print("Removing " .. tostring(ent:EntIndex()))
+        ent:Remove()
+    end
+end
+

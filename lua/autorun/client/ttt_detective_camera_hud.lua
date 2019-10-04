@@ -38,6 +38,7 @@ hook.Add("HUDPaint", "DrawCameraScreen", function()
 			end
 		end
 	end
+
 	if RENDER_CONNECTION_LOST and LocalPlayer():Alive() then
 		surface.SetDrawColor(Color(0, 0, 0))
 		surface.DrawRect(ScrW() - x - 18, 14, x, ScrH() / 3.7)
