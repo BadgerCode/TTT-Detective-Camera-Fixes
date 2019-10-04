@@ -44,22 +44,26 @@ if SERVER then
     util.AddNetworkString("Badger_TTTCameraPickedUp")
 
     function ENT:Use(user)
-        if user:IsDetective() and user == self:GetPlayer() then
-            self:Remove()
+        if self:GetWelded() and user != self:GetPlayer() then return end
 
-            if !self:GetPitchingModeEnabled() then
-                user:Give("weapon_ttt_detective_camera_badger")
-            end
+        self:Remove()
 
-            net.Start("Badger_TTTCameraPickedUp")
-            net.Send(user)
+        if !self:GetPitchingModeEnabled() then
+            user:Give("weapon_ttt_detective_camera_badger")
         end
+
+        net.Start("Badger_TTTCameraPickedUp")
+        net.Send(user)
     end
 
     function ENT:OnTakeDamage(dmginfo)
         if self:GetPitchingModeEnabled() then return end
-        if dmginfo:GetDamageType() ~= DMG_BURN then
-            if IsValid(self:GetPlayer()) and self:GetWelded() then
+        if IsValid(dmginfo:GetAttacker())
+            and dmginfo:GetAttacker():IsPlayer()
+            and dmginfo:GetAttacker():IsSpec() then return end
+
+        if dmginfo:GetDamageType() ~= DMG_BURN and self:GetWelded() then
+            if IsValid(self:GetPlayer()) then
                 net.Start("Badger_TTTCameraDetach")
                 net.Send(self:GetPlayer())
             end
@@ -67,6 +71,7 @@ if SERVER then
             self:SetWelded(false)
             self:TakePhysicsDamage(dmginfo)
         end
+
         self.HP = self.HP - dmginfo:GetDamage()
         if self.HP <= 0 then
             local ed = EffectData()
