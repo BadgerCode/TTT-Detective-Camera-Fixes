@@ -78,6 +78,8 @@ function SWEP:PrimaryAttack()
                 camera:SetPitchingModeEnabled(true)
                 self:SetCamera(camera)
                 self:SetHoldType("magic")
+
+                hook.Call("TTTEquipmentUse", nil, self.Owner, self, "Camera placed") -- TODO: Translate
             end
         else
             if self:GetCamera():GetPitchingModeEnabled() then

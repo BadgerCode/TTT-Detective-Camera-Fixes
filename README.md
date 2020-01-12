@@ -16,8 +16,3 @@ _Fixes for the [TTT Detective Camera](https://steamcommunity.com/sharedfiles/fil
     * _This is because it hooks into ShouldDrawLocalPlayer_
 * Is the camera too difficult to see?
 * Pitching the camera is initially a bit difficult
-
-
-# Feedback
-* Can it be seen in the TTT damage log
-
